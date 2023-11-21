@@ -1,11 +1,13 @@
 import './App.css';
 import Home from './Home';
+import StudentsView from './component/student/StudentsView';
 
 function App() {
   return (
     <div className="App">
       <h2>welcome to front-end</h2>
       <Home />
+      <StudentsView />
     </div>
   );
 }
