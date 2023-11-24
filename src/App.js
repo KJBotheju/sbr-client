@@ -6,9 +6,10 @@ import StudentsView from './component/student/StudentsView';
 import NavBar from './component/common/NavBar';
 import { BrowserRouter as Router, Routes, Route} from "react-router-dom";
 
+
 function App() {
   return (
-    <div className="App">
+    <main className="container mt-3">
       <Router>
       <NavBar />
         <Routes>
@@ -18,7 +19,7 @@ function App() {
           </Route>
         </Routes>
       </Router>
-    </div>
+    </main>
   );
 }
 
