@@ -25,7 +25,7 @@ const StudentProfile = () => {
 	};
 
 	return (
-		<section
+		<section 
 			className="shadow"
 			style={{ backgroundColor: "whitesmoke" }}>
 			<div className="container py-5">
