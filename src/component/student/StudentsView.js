@@ -1,81 +1,91 @@
-import React, { useEffect,useState } from 'react'
+import React, { useEffect, useState } from "react";
 import axios from "axios";
-import {FaTrashAlt,FaEdit,FaEye} from "react-icons/fa"
-import { Link } from 'react-router-dom';
+import { FaTrashAlt, FaEdit, FaEye } from "react-icons/fa";
+import { Link } from "react-router-dom";
+import Search from "../common/Search";
 
 const StudentsView = () => {
+  const [students, setStudents] = useState([]); // students is the state variable, setStudents is the function that updates the state variable
+  const [search, setSearch] = useState("");
 
-    const[students, setStudents] = useState([]); // students is the state variable, setStudents is the function that updates the state variable
-    
-    useEffect(()=>{
-        loadStudents();
-    },[])
-    
-    const loadStudents = async()=>{
-    const result = await axios.get(
-        "http://localhost:8080/students",
-        {
-            validateStatus: () => {
-                return true;
-            },
-        }
-        );
-        if(result.status === 302){
-            setStudents(result.data);
-        }
-        
+  useEffect(() => {
+    loadStudents();
+  }, []);
+
+  const loadStudents = async () => {
+    const result = await axios.get("http://localhost:8080/students", {
+      validateStatus: () => {
+        return true;
+      },
+    });
+    if (result.status === 302) {
+      setStudents(result.data);
+    }
   };
 
-  const handleDelete = async(id)=>{
+  const handleDelete = async (id) => {
     await axios.delete(`http://localhost:8080/students/delete/${id}`);
     loadStudents();
-  }
-    return (
+  };
+  return (
     <section>
-      <table className = "table table-bordered table-hover shadow">
+      <Search search={search}
+      setSearch={setSearch}/>
+      <table className="table table-bordered table-hover shadow">
         <thead>
-            <tr className="text-center">
-                <th>ID</th>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Email</th>
-                <th>Faculty</th>
-                <th colSpan="3">Actions</th>
-            </tr>
+          <tr className="text-center">
+            <th>ID</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email</th>
+            <th>Faculty</th>
+            <th colSpan="3">Actions</th>
+          </tr>
         </thead>
-        
-        <tbody className='text-center'>
-        {students.map((student,index) =>(
-            <tr key={student.id}>
-                <th scope='row'key={index}>
-                    {index + 1}
+
+        <tbody className="text-center">
+          {students
+            .filter((st) => st.firstName.toLowerCase().includes(search))
+
+            .map((student, index) => (
+              <tr key={student.id}>
+                <th scope="row" key={index}>
+                  {index + 1}
                 </th>
                 <td>{student.firstName}</td>
                 <td>{student.lastName}</td>
                 <td>{student.email}</td>
-                <td>{student.faculty}</td>            
-                <td className='mx-2'>
-                    <Link to={`/student-profile/${student.id}`} className='btn btn-info'>
+                <td>{student.faculty}</td>
+                <td className="mx-2">
+                  <Link
+                    to={`/student-profile/${student.id}`}
+                    className="btn btn-info"
+                  >
                     <FaEye />
-                    </Link>
+                  </Link>
                 </td>
-                <td className='mx-2'>
-                    <Link to={`/edit-student/${student.id}`} className='btn btn-warning'>
+                <td className="mx-2">
+                  <Link
+                    to={`/edit-student/${student.id}`}
+                    className="btn btn-warning"
+                  >
                     <FaEdit />
-                    </Link>
+                  </Link>
                 </td>
-                <td className='mx-2'>
-                    <button className='btn btn-danger'
-                    onClick={()=>handleDelete(student.id)}>
+                <td className="mx-2">
+                  <button
+                    className="btn btn-danger"
+                    onClick={() => handleDelete(student.id)}
+                  >
                     <FaTrashAlt />
-                    </button>
+                  </button>
                 </td>
-            </tr>
-        ))}
+              </tr>
+            ))}
         </tbody>
       </table>
     </section>
-  )
-}
+  );
+};
 
-export default StudentsView
+export default StudentsView;
